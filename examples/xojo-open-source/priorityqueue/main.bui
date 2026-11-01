@@ -1,0 +1,11 @@
+Import priorityqueuekit
+
+Sub Main()
+    Dim jobs As New MinPriorityQueue Of String(100)
+    jobs.Add(10.0, "background refresh")
+    jobs.Add(1.0, "first urgent job")
+    jobs.Add(1.0, "second urgent job")
+    While jobs.Count > 0
+        Print String.From(jobs.PeekPriority()) + ": " + jobs.Pop()
+    End While
+End Sub

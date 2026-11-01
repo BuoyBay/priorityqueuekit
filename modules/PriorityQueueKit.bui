@@ -1,0 +1,104 @@
+''' Stable min-priority binary heap. Equal priorities preserve insertion order.
+Public Class MinPriorityQueue Of T
+    Private Property mValues As Array Of T = []
+    Private Property mPriorities As Array Of Double = []
+    Private Property mOrders As Array Of Integer = []
+    Private Property mSequence As Integer = 0
+    Private Property mLimit As Integer
+
+    Public Sub Constructor(maxEntries As Integer = 100000)
+        If maxEntries < 1 Or maxEntries > 1000000 Then
+            Throw New InvalidArgumentException("Queue capacity must be in 1..1000000")
+        End If
+        mLimit = maxEntries
+    End Sub
+
+    Public Property Count As Integer
+        Get
+            Return Array.Count(mValues)
+        End Get
+    End Property
+
+    Public Property Capacity As Integer
+        Get
+            Return mLimit
+        End Get
+    End Property
+
+    Private Function Before(a As Integer, b As Integer) As Boolean
+        If mPriorities(a) < mPriorities(b) Then Return True
+        If mPriorities(a) > mPriorities(b) Then Return False
+        Return mOrders(a) < mOrders(b)
+    End Function
+
+    Private Sub Swap(a As Integer, b As Integer)
+        Dim value As T = mValues(a)
+        mValues(a) = mValues(b)
+        mValues(b) = value
+        Dim priority As Double = mPriorities(a)
+        mPriorities(a) = mPriorities(b)
+        mPriorities(b) = priority
+        Dim order As Integer = mOrders(a)
+        mOrders(a) = mOrders(b)
+        mOrders(b) = order
+    End Sub
+
+    Public Sub Add(priority As Double, value As T)
+        If Not (priority >= -1.7976931348623157e308 And priority <= 1.7976931348623157e308) Then
+            Throw New InvalidArgumentException("Queue priority must be finite")
+        End If
+        If Me.Count >= mLimit Then Throw New InvalidArgumentException("Queue capacity reached")
+        If mSequence = 9223372036854775807 Then Throw New InvalidArgumentException("Queue insertion sequence exhausted; clear to reset")
+        Array.Append(mValues, value)
+        Array.Append(mPriorities, priority)
+        Array.Append(mOrders, mSequence)
+        mSequence += 1
+        Dim index As Integer = Me.Count - 1
+        While index > 0
+            Dim parent As Integer = (index - 1) \ 2
+            If Not Me.Before(index, parent) Then Exit While
+            Me.Swap(index, parent)
+            index = parent
+        End While
+    End Sub
+
+    Public Function PeekValue() As T
+        If Me.Count = 0 Then Throw New InvalidArgumentException("Queue is empty")
+        Return mValues(0)
+    End Function
+
+    Public Function PeekPriority() As Double
+        If Me.Count = 0 Then Throw New InvalidArgumentException("Queue is empty")
+        Return mPriorities(0)
+    End Function
+
+    Public Function Pop() As T
+        If Me.Count = 0 Then Throw New InvalidArgumentException("Queue is empty")
+        Dim value As T = mValues(0)
+        Dim last As Integer = Me.Count - 1
+        Me.Swap(0, last)
+        Array.RemoveAt(mValues, last)
+        Array.RemoveAt(mPriorities, last)
+        Array.RemoveAt(mOrders, last)
+        Dim index As Integer = 0
+        While index * 2 + 1 < Me.Count
+            Dim child As Integer = index * 2 + 1
+            If child + 1 < Me.Count Then
+                If Me.Before(child + 1, child) Then child += 1
+            End If
+            If Not Me.Before(child, index) Then Exit While
+            Me.Swap(index, child)
+            index = child
+        End While
+        Return value
+    End Function
+
+    Public Sub Clear()
+        ' Release payloads only after all heap state is consistent. Destructors may reenter.
+        Dim heldValues As Array Of T = mValues
+        mValues = []
+        mPriorities = []
+        mOrders = []
+        mSequence = 0
+    End Sub
+End Class
