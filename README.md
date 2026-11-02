@@ -23,7 +23,7 @@ consumer project for reproducible installs.
 
 ## Example
 
-```buoy
+```basic
 Import priorityqueuekit
 
 Sub Main()
