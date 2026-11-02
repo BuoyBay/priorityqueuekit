@@ -27,5 +27,3 @@ it adds stable ties, static generic payloads and explicit entry limits, and uses
 exceptions instead of upstream's NaN sentinel for an empty PeekPriority. There is
 no priority-update/remove-by-handle API, custom comparator, max-first mode,
 serialization, or concurrent queue. See [provenance](../PROVENANCE.md).
-
-Maintainers run the private validation suite before release. See the repository README for public build instructions.

@@ -1,6 +1,6 @@
 # Stable generic min-priority queues
 
-Pure Buoy stable min-priority queues, inspired by [Kem Tekinay's heap-based queue](https://github.com/ktekinay/Xojo-PriorityQueue/).
+Stable min-priority queues, inspired by [Kem Tekinay's heap-based queue](https://github.com/ktekinay/Xojo-PriorityQueue/).
 `Import priorityqueuekit` exposes `MinPriorityQueue Of T` with arbitrary statically
 known payload types. No native dependencies or Variant boxing.
 
@@ -56,8 +56,6 @@ On your own machine, install Buoy and run:
 ```sh
 buoy ai init --both
 ```
-
-The generated agent files and editor settings stay local and are ignored by Git.
 
 ## Contributing
 
