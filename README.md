@@ -1,4 +1,4 @@
-# Stable generic min-priority queues
+# Stable min-heaps
 
 Stable min-priority queues, inspired by [Kem Tekinay's heap-based queue](https://github.com/ktekinay/Xojo-PriorityQueue/).
 `Import priorityqueuekit` exposes `MinPriorityQueue Of T` with arbitrary statically
